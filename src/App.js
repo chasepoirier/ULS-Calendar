@@ -31,6 +31,7 @@ class App extends Component {
         year: ''
       },
       currentFilterText: '',
+      currentSearch: '',
       highlightedDates: {highlighted: []},
       selectedDay: null,
       dates: []
@@ -136,6 +137,7 @@ class App extends Component {
   clearFilters = () => { // clear date filters and text
     this.setState({currentFilter: {date: '', month: '', year: '', }})
     this.setState({currentFilterText: ''})
+    this.setState({currentSearch: ''})
     this.setState({selectedDay: null})
   }
 
@@ -199,6 +201,10 @@ class App extends Component {
     return one === two;
   }
 
+  handleSearch = (e) => {
+    this.setState({currentSearch: e.target.value.toLowerCase()})
+  }
+
 
 
 
@@ -237,6 +243,7 @@ class App extends Component {
             filterMonth={this.state.currentFilter.month}
             filterDay={this.state.currentFilter.date}
             filterYear={this.state.currentFilter.year}
+            currentSearch={this.state.currentSearch}
             events={[...this.state.events]}
             handleCardHover={this.handleCardHover}
             handleCardMouseLeave={this.handleCardMouseLeave}
@@ -266,6 +273,15 @@ class App extends Component {
               </div>
             </div>
 
+            <input type="search" className="cal-search-filter form-control form-control-lg my-5 w-100" value={this.state.currentSearch} onChange={this.handleSearch} placeholder="Type to filter by title..." />
+
+            <a className="card cal-cta p-4" href="#emailPopup" data-toggle="modal" data-target="#emailPopup">
+              <div className="cal-cta__overlay"></div>
+              <div className="cal-cta__content">
+                <h3>Get event updates via email.</h3>
+                <p className="smallcaps text-white">Sign up now</p>
+              </div>
+            </a>
           </div>
 
         </div>

@@ -12,8 +12,26 @@ class CardList extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // every time new props are received, filter the events and update the state
-    const newEvents = this.filterEvents(nextProps.events, nextProps.filterYear, nextProps.filterMonth, nextProps.filterDay)
-    this.setState({events: newEvents})
+    // first pass: check the text search filter
+    const eventsPass1 = this.searchByText(nextProps.events, nextProps.currentSearch);
+    // second pass: filter by selected date/time - note we are using the result of the first pass as our first parameter
+    const eventsPass2 = this.filterEvents(eventsPass1, nextProps.filterYear, nextProps.filterMonth, nextProps.filterDay)
+    this.setState({events: eventsPass2})
+  }
+
+  searchByText = (events, string) => {
+    if (string === '') { // if it's an empty string, return all events
+      return events;
+    } else { // if not, filter through the events and return the ones that match
+      return events.filter(i => {
+        const title = i.title.toString().toLowerCase();
+        let match = false;
+        if (title.includes(string)) {
+          match = true
+        }
+        return match;
+      });
+    }
   }
 
   filterEvents = (events, year, month, day) => {
