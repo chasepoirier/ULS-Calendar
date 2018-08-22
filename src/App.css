@@ -7376,6 +7376,42 @@ label {
   border-radius: 5px;
   color: #434f69;
   overflow: hidden; }
+  .calendar .DayPicker-NavButton {
+    padding: 0;
+    width: 20px;
+    background-image: none; }
+    .calendar .DayPicker-NavButton:before {
+      content: '';
+      background-color: white;
+      opacity: 0;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      position: relative;
+      top: -25px;
+      left: -10px;
+      display: block;
+      transition: .5s ease opacity; }
+    .calendar .DayPicker-NavButton:hover:before, .calendar .DayPicker-NavButton:focus:before {
+      opacity: .1; }
+    .calendar .DayPicker-NavButton:focus {
+      outline: none; }
+  .calendar__nextBtnHighlight .DayPicker-NavButton--next:before {
+    opacity: 0.1; }
+  .calendar__prevBtnHighlight .DayPicker-NavButton--prev:before {
+    opacity: 0.1; }
+  .calendar .DayPicker-NavButton--prev {
+    margin-left: 20px;
+    border-top: 15px solid transparent;
+    border-right: 20px solid white;
+    border-bottom: 15px solid transparent; }
+  .calendar .DayPicker-NavButton--next {
+    margin-right: 20px;
+    border-top: 15px solid transparent;
+    border-left: 20px solid white;
+    border-bottom: 15px solid transparent; }
+    .calendar .DayPicker-NavButton--next:before {
+      left: -38px; }
   .calendar .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
     background-color: #434f69 !important; }
 

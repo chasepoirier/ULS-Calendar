@@ -24,9 +24,15 @@ class CardList extends React.Component {
       return events;
     } else { // if not, filter through the events and return the ones that match
       return events.filter(i => {
-        const title = i.title.toString().toLowerCase();
+        // we will search in the following 4 fields
+        const title = i.title.toLowerCase();
+        const desc = i.description.toLowerCase();
+        const campus = i.campus.toLowerCase();
+        const excerpt = i.excerpt.toLowerCase();
+        
         let match = false;
-        if (title.includes(string)) {
+        // check to see if any of the 4 fields contain the string
+        if (title.includes(string) || desc.includes(string) || campus.includes(string) || excerpt.includes(string)) {
           match = true
         }
         return match;

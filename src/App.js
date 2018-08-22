@@ -34,7 +34,8 @@ class App extends Component {
       currentSearch: '',
       highlightedDates: {highlighted: []},
       selectedDay: null,
-      dates: []
+      dates: [],
+      currentDatePickerMonth: new Date().getMonth()
     }
     this.modifiersStyles = {
       highlighted: {
@@ -110,8 +111,6 @@ class App extends Component {
           })
 
       this.setState({ dates: datesUnique })
-      console.log(res.data);
-      console.log(this.state);
     })
   }
 
@@ -119,6 +118,7 @@ class App extends Component {
     this.setState({currentFilter: {month: date.getMonth(), year: date.getFullYear()}})
     this.setTextFilter(date, false);
     this.setState({selectedDay: null})
+    this.setState({currentDatePickerMonth: date.getMonth()})
   }
 
   filterByDate = (date) => {
@@ -178,7 +178,30 @@ class App extends Component {
   }
 
   handleCardHover = (item) => {
+    // highlight the corresponding dates on the datepicker
     this.setState({highlightedDates: {highlighted: item.range}})
+  }
+
+  // if the highlighted dates are in the next month, highlight the next/previous button
+  // this function is called in the className for the .calendar class
+  highlightedDatesOutsideCurrentMonth = () => {
+    let prevHighlight = false;
+    let nextHighlight = false;
+    this.state.highlightedDates.highlighted.map(i => {
+      if (i.getMonth() > this.state.currentDatePickerMonth) {
+        nextHighlight = true;
+      } else if (i.getMonth() < this.state.currentDatePickerMonth) {
+        prevHighlight = true;
+      }
+    })
+    if (prevHighlight) {
+      return 'calendar__prevBtnHighlight';
+    }
+    if (nextHighlight) {
+      return 'calendar__nextBtnHighlight';
+    } else {
+      return 'hey';
+    }
   }
 
   handleCardMouseLeave = () => {
@@ -203,6 +226,7 @@ class App extends Component {
 
   handleSearch = (e) => {
     this.setState({currentSearch: e.target.value.toLowerCase()})
+    console.log(this.state.highlightedDates);
   }
 
 
@@ -257,10 +281,12 @@ class App extends Component {
               { statusText }
             </div>
 
-            <div className="calendar">
+            <div className={'calendar ' + this.highlightedDatesOutsideCurrentMonth()}>
 
               <div id="datepicker">
                 <DayPicker
+                  month={new Date()}
+
                   selectedDays={this.state.selectedDay}
                   modifiers={this.state.highlightedDates}
                   modifiersStyles={this.modifiersStyles}
@@ -273,9 +299,9 @@ class App extends Component {
               </div>
             </div>
 
-            <input type="search" className="cal-search-filter form-control form-control-lg my-5 w-100" value={this.state.currentSearch} onChange={this.handleSearch} placeholder="Type to filter by title..." />
+            <input type="search" className="cal-search-filter form-control form-control-lg my-5 w-100" value={this.state.currentSearch} onChange={this.handleSearch} placeholder="Type to filter..." />
 
-            <a className="card cal-cta p-4" href="#emailPopup" data-toggle="modal" data-target="#emailPopup">
+            <a className="card cal-cta p-4 d-none d-lg-block" href="#emailModal" data-toggle="modal" data-target="#emailModal">
               <div className="cal-cta__overlay"></div>
               <div className="cal-cta__content">
                 <h3>Get event updates via email.</h3>

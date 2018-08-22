@@ -20,6 +20,19 @@ class CalCard extends Component {
     e.preventDefault();
     console.log(a);
   }
+  renderCampus = () => {
+    switch (this.props.campus.toLowerCase()) {
+      case 'both':
+        return 'Both Campuses'
+        break;
+      case 'gettysburg':
+        return 'Gettysburg Campus';
+        break;
+      case 'philadelphia':
+        return 'Philadelphia Campus';
+        break;
+    }
+  }
 
   render() {
     return (
@@ -39,7 +52,7 @@ class CalCard extends Component {
         <span className="cal-card__datetime">{this.props.dateTime}</span>
         <span className="cal-card__title">{this.props.title}</span>
         <div className="cal-card__info">
-          <span className="cal-card__campus">{this.props.campus}</span>
+          <span className="cal-card__campus">{this.renderCampus()}</span>
           <span className="cal-card__desc">{this.props.excerpt}</span>
         </div>
       </a>
