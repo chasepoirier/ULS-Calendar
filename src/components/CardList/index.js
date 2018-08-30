@@ -29,7 +29,7 @@ class CardList extends React.Component {
         const desc = i.description.toLowerCase();
         const campus = i.campus.toLowerCase();
         const excerpt = i.excerpt.toLowerCase();
-        
+
         let match = false;
         // check to see if any of the 4 fields contain the string
         if (title.includes(string) || desc.includes(string) || campus.includes(string) || excerpt.includes(string)) {
@@ -53,7 +53,7 @@ class CardList extends React.Component {
         })
         return match;
 
-      } else if (month && year) { // only month and year filters are applied
+      } else if ((month && year) || (month === 0 && year)) { // only month and year filters are applied
         // filter the year and month
         let match = false;
         // filter through each date in the supplied event's range, and match year and month

@@ -10,8 +10,9 @@ import LikeButton from './components/button'
 import CalCard from './components/CalCard'
 import Filter from './components/Filter'
 import CardList from './components/CardList'
+import SidebarCard from './components/SidebarCard'
 
-const url = 'https://unitedlutheranseminary.edu/wp-json/wp/v2/calendar?_embed'
+const url = 'https://unitedlutheranseminary.edu/wp-json/wp/v2/calendar?_embed&per_page=50&categories=54' // return limit of 50 per page; only return category 54, 'calendar: current'
 
 Date.prototype.addDays = function(days) {
   let date = new Date(this.valueOf());
@@ -35,7 +36,9 @@ class App extends Component {
       highlightedDates: {highlighted: []},
       selectedDay: null,
       dates: [],
-      currentDatePickerMonth: new Date().getMonth()
+      currentDatePickerMonth: new Date().getMonth(),
+      currentDatePickerYear: new Date().getFullYear(),
+      datepickerMonth: new Date()
     }
     this.modifiersStyles = {
       highlighted: {
@@ -111,6 +114,8 @@ class App extends Component {
           })
 
       this.setState({ dates: datesUnique })
+      // once the events have been received and added to state, set the datepicker month to the date of the first event
+      this.setState({ datepickerMonth: ordered_eventsArr[0].startDate })
     })
   }
 
@@ -119,6 +124,7 @@ class App extends Component {
     this.setTextFilter(date, false);
     this.setState({selectedDay: null})
     this.setState({currentDatePickerMonth: date.getMonth()})
+    this.setState({currentDatePickerYear: date.getFullYear()})
   }
 
   filterByDate = (date) => {
@@ -180,6 +186,7 @@ class App extends Component {
   handleCardHover = (item) => {
     // highlight the corresponding dates on the datepicker
     this.setState({highlightedDates: {highlighted: item.range}})
+    console.log(this.state);
   }
 
   // if the highlighted dates are in the next month, highlight the next/previous button
@@ -188,8 +195,15 @@ class App extends Component {
     let prevHighlight = false;
     let nextHighlight = false;
     this.state.highlightedDates.highlighted.map(i => {
-      if (i.getMonth() > this.state.currentDatePickerMonth) {
+      // first, handle cases where the years are different
+      if (i.getFullYear() > this.state.currentDatePickerYear) { // if the event is next year, highlight the next button
         nextHighlight = true;
+      } else if (i.getFullYear() < this.state.currentDatePickerYear) {
+        prevHighlight = true;
+        // then, if the years are the same, check if the hovered dates (i) are months greater than the current month
+      } else if (i.getMonth() > this.state.currentDatePickerMonth) {
+        nextHighlight = true;
+        // else check if the hovered events' month is less than the currently viewed month
       } else if (i.getMonth() < this.state.currentDatePickerMonth) {
         prevHighlight = true;
       }
@@ -226,7 +240,6 @@ class App extends Component {
 
   handleSearch = (e) => {
     this.setState({currentSearch: e.target.value.toLowerCase()})
-    console.log(this.state.highlightedDates);
   }
 
 
@@ -285,7 +298,7 @@ class App extends Component {
 
               <div id="datepicker">
                 <DayPicker
-                  month={new Date()}
+                  month={this.state.datepickerMonth}
 
                   selectedDays={this.state.selectedDay}
                   modifiers={this.state.highlightedDates}
@@ -301,13 +314,18 @@ class App extends Component {
 
             <input type="search" className="cal-search-filter form-control form-control-lg my-5 w-100" value={this.state.currentSearch} onChange={this.handleSearch} placeholder="Type to filter..." />
 
-            <a className="card cal-cta p-4 d-none d-lg-block" href="#emailModal" data-toggle="modal" data-target="#emailModal">
-              <div className="cal-cta__overlay"></div>
-              <div className="cal-cta__content">
-                <h3>Get event updates via email.</h3>
-                <p className="smallcaps text-white">Sign up now</p>
-              </div>
-            </a>
+            <SidebarCard
+              title="Get event updates via email."
+              subtitle="Sign up now"
+              link="#emailModal"
+              modal={true}
+            />
+
+            <SidebarCard
+              title="Submit an event"
+              link="https://james1367.typeform.com/to/CqSYRk"
+            />
+
           </div>
 
         </div>
