@@ -12,7 +12,7 @@ import Filter from './components/Filter'
 import CardList from './components/CardList'
 import SidebarCard from './components/SidebarCard'
 
-const url = 'https://unitedlutheranseminary.edu/wp-json/wp/v2/calendar?_embed&per_page=50&categories=54' // return limit of 50 per page; only return category 54, 'calendar: current'
+const url = 'https://unitedlutheranseminary.edu/wp-json/wp/v2/calendar?_embed&per_page=50&calendar_categories=55' // return limit of 50 per page; only return category 54, 'calendar: current'
 
 Date.prototype.addDays = function(days) {
   let date = new Date(this.valueOf());
